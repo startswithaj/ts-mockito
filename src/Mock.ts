@@ -1,14 +1,14 @@
 import * as _ from "lodash";
-import {Matcher} from "./matcher/type/Matcher";
-import {MethodAction} from "./MethodAction";
-import {MethodStubCollection} from "./MethodStubCollection";
-import {MethodToStub} from "./MethodToStub";
-import {MethodStub} from "./stub/MethodStub";
-import {ReturnValueMethodStub} from "./stub/ReturnValueMethodStub";
-import {strictEqual} from "./ts-mockito";
-import {MockableFunctionsFinder} from "./utils/MockableFunctionsFinder";
-import {ObjectInspector} from "./utils/ObjectInspector";
-import {ObjectPropertyCodeRetriever} from "./utils/ObjectPropertyCodeRetriever";
+import { Matcher } from "./matcher/type/Matcher";
+import { MethodAction } from "./MethodAction";
+import { MethodStubCollection } from "./MethodStubCollection";
+import { MethodToStub } from "./MethodToStub";
+import { MethodStub } from "./stub/MethodStub";
+import { ReturnValueMethodStub } from "./stub/ReturnValueMethodStub";
+import { strictEqual } from "./ts-mockito";
+import { MockableFunctionsFinder } from "./utils/MockableFunctionsFinder";
+import { ObjectInspector } from "./utils/ObjectInspector";
+import { ObjectPropertyCodeRetriever } from "./utils/ObjectPropertyCodeRetriever";
 
 export class Mocker {
     public mock: any = {};
@@ -39,7 +39,8 @@ export class Mocker {
                     const hasMethodStub = name in target;
 
                     if (!hasMethodStub) {
-                        return this.createActionListener(name.toString());
+                        const isInstanceAndFunctionCall = true;
+                        return this.createActionListener(name.toString(), isInstanceAndFunctionCall);
                     }
                     return target[name];
                 },
@@ -135,14 +136,14 @@ export class Mocker {
     }
 
     protected createInstancePropertyDescriptorListener(key: string,
-                                                       descriptor: PropertyDescriptor,
-                                                       prototype: any): void {
+        descriptor: PropertyDescriptor,
+        prototype: any): void {
         if (this.instance.hasOwnProperty(key)) {
             return;
         }
-
+        const isInstanceAndFunctionCall = false
         Object.defineProperty(this.instance, key, {
-            get: this.createActionListener(key),
+            get: this.createActionListener(key, isInstanceAndFunctionCall),
         });
     }
 
@@ -150,15 +151,15 @@ export class Mocker {
         if (this.instance.hasOwnProperty(key)) {
             return;
         }
-
-        this.instance[key] = this.createActionListener(key);
+        const isInstanceAndFunctionCall = true;
+        this.instance[key] = this.createActionListener(key, isInstanceAndFunctionCall);
     }
 
-    protected createActionListener(key: string): () => any {
+    protected createActionListener(key: string, isInstanceAndFunctionCall: boolean): () => any {
         return (...args) => {
             const action: MethodAction = new MethodAction(key, args);
             this.methodActions.push(action);
-            const methodStub = this.getMethodStub(key, args);
+            const methodStub = this.getMethodStub(key, args, isInstanceAndFunctionCall);
             methodStub.execute(args);
             return methodStub.getValue();
         };
@@ -209,7 +210,7 @@ export class Mocker {
 
     private createMethodToStub(key: string): () => any {
         return (...args) => {
-            if (args.length === 1 && args[0] === "__tsMockitoGetInfo") {
+            if ((args.length as any) === 1 && (args as any)[0] === "__tsMockitoGetInfo") {
                 return {
                     key,
                     mocker: this,
@@ -222,7 +223,7 @@ export class Mocker {
             const matchers: Matcher[] = [];
 
             for (const arg of args) {
-                if (!(arg instanceof Matcher)) {
+                if (!((arg as any) instanceof Matcher)) {
                     matchers.push(strictEqual(arg));
                 } else {
                     matchers.push(arg);
@@ -233,12 +234,15 @@ export class Mocker {
         };
     }
 
-    private getMethodStub(key: string, args: any[]): MethodStub {
+    private getMethodStub(key: string, args: any[], isInstanceAndFunctionCall: boolean): MethodStub {
         const methodStub: MethodStubCollection = this.methodStubCollections[key];
         if (methodStub && methodStub.hasMatchingInAnyGroup(args)) {
             const groupIndex = methodStub.getLastMatchingGroupIndex(args);
             return methodStub.getFirstMatchingFromGroupAndRemoveIfNotLast(groupIndex, args);
         } else {
+            if (isInstanceAndFunctionCall) {
+                throw new Error('No matching stub for key: ' + key + ' and args: ' + args)
+            }
             return this.getEmptyMethodStub(key, args);
         }
     }
