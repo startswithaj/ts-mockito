@@ -32,10 +32,10 @@ export function spy<T>(instanceToSpy: T): T {
     return new Spy(instanceToSpy).getMock();
 }
 
-export function mock<T>(clazz: (new (...args: any[]) => T) | (Function & { prototype: T }), options: MockOptions): T;
+export function mock<T>(clazz: (new (...args: any[]) => T) | (Function & { prototype: T }), options?: MockOptions): T;
 export function mock<T>(clazz?: any, options?: MockOptions): T;
-export function mock<T>(clazz?: any, options?: MockOptions): T {
-    return new Mocker(clazz, {}, options).getMock();
+export function mock<T>(clazz?: any, options: MockOptions = { throwIfMockedFunctionIsNotStubbed: false }): T {
+    return new Mocker(clazz, options).getMock();
 }
 
 export function verify<T>(method: T): MethodStubVerificator<T> {

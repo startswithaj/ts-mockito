@@ -1,11 +1,12 @@
 import { ArgCaptor1, ArgCaptor10, ArgCaptor2, ArgCaptor3, ArgCaptor4, ArgCaptor5, ArgCaptor6, ArgCaptor7, ArgCaptor8, ArgCaptor9 } from "./capture/ArgCaptor";
 import { MethodStubSetter } from "./MethodStubSetter";
 import { MethodStubVerificator } from "./MethodStubVerificator";
+import { MockOptions } from "./Mock";
 export declare function spy<T>(instanceToSpy: T): T;
 export declare function mock<T>(clazz: (new (...args: any[]) => T) | (Function & {
     prototype: T;
-})): T;
-export declare function mock<T>(clazz?: any): T;
+}), options?: MockOptions): T;
+export declare function mock<T>(clazz?: any, options?: MockOptions): T;
 export declare function verify<T>(method: T): MethodStubVerificator<T>;
 export declare function when<T>(method: Promise<T>): MethodStubSetter<Promise<T>, T, Error>;
 export declare function when<T>(method: T): MethodStubSetter<T>;

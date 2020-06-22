@@ -24,7 +24,7 @@ export class Mocker {
     private excludedPropertyNames: string[] = ["hasOwnProperty"];
 
 
-    constructor(private clazz: any, public instance: any = {}, private options: MockOptions = { throwIfMockedFunctionIsNotStubbed: false }) {
+    constructor(private clazz: any, private options: MockOptions = { throwIfMockedFunctionIsNotStubbed: false }, public instance: any = {}) {
         this.mock.__tsmockitoInstance = this.instance;
         this.mock.__tsmockitoMocker = this;
         if (_.isObject(this.clazz) && _.isObject(this.instance)) {

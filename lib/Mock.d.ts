@@ -7,8 +7,8 @@ export interface MockOptions {
 }
 export declare class Mocker {
     private clazz;
-    instance: any;
     private options;
+    instance: any;
     mock: any;
     protected objectInspector: ObjectInspector;
     private methodStubCollections;
@@ -16,7 +16,7 @@ export declare class Mocker {
     private mockableFunctionsFinder;
     private objectPropertyCodeRetriever;
     private excludedPropertyNames;
-    constructor(clazz: any, instance?: any, options?: MockOptions);
+    constructor(clazz: any, options?: MockOptions, instance?: any);
     getMock(): any;
     createCatchAllHandlerForRemainingPropertiesWithoutGetters(): any;
     reset(): void;
