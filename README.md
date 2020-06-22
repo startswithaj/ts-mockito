@@ -1,4 +1,15 @@
-# ts-mockito [![build badge](https://travis-ci.org/NagRock/ts-mockito.svg?branch=master)](https://travis-ci.org/NagRock/ts-mockito) [![codecov](https://codecov.io/gh/NagRock/ts-mockito/branch/master/graph/badge.svg)](https://codecov.io/gh/NagRock/ts-mockito)
+# @startswithaj/ts-mockito
+Fork of [ts-mockito](https://github.com/NagRock/ts-mockito)
+
+This fork simply implements the option to have mocks throw an exception if an un-stubbed function is called. This solves a problem that I had where partially stubbed mocks would be used and an un-stubbed function would be called inside of an rxjs stream returning null, exploding and making things really hard to track down. This option means things fail quickly and obviously.
+
+I tried first using @johanblumenberg/ts-mockito which seems like a very good fork of ts-mockito overall and has the option of MockPropertyPolicy.throws unfortunately when this option is on the AngularX IOC code doesn't like the mocks - which is kind of understandable as they are Proxies masquerade as mocks, which means some runtime checks can be fooled. I spent sometime trying to understand why Angular thought the mocks with MockPropertyPolicy.throw were `Maps` but ultimately ran out of time.
+
+Further, I attempted to implement:
+- [Add warning when forgetting to call instance()](https://github.com/johanblumenberg/ts-mockito/commit/e2b52a77324136d8b6a8aabf51eec8babaca221b)
+But because the implementation throws next tick it doesn't always make your immediate test fail. I need sometime to see if I can think of a better methodology
+
+Lastly as im not going to muddy npm any further I commit the lib and reference this git repo directly.
 
 Mocking library for TypeScript inspired by http://mockito.org/
 
@@ -161,7 +172,7 @@ let mockedFoo:Foo = mock(Foo);
 let foo:Foo = instance(mockedFoo);
 
 when(mockedFoo.sumTwoNumbers(anyNumber(), anyNumber())).thenCall((arg1:number, arg2:number) => {
-    return arg1 * arg2; 
+    return arg1 * arg2;
 });
 
 // prints '50' because we've changed sum method implementation to multiply!
@@ -362,13 +373,13 @@ const spiedFoo = spy(foo);
 
 foo.bar();
 
-console.log(capture(spiedFoo.bar).last()); // [42] 
+console.log(capture(spiedFoo.bar).last()); // [42]
 ```
 
 ### Thanks
 
-* Szczepan Faber (https://www.linkedin.com/in/szczepiq) 
-* Sebastian Konkol (https://www.linkedin.com/in/sebastiankonkol) 
+* Szczepan Faber (https://www.linkedin.com/in/szczepiq)
+* Sebastian Konkol (https://www.linkedin.com/in/sebastiankonkol)
 * Clickmeeting (http://clickmeeting.com)
 * Michał Stocki (https://github.com/michalstocki)
 * Łukasz Bendykowski (https://github.com/viman)

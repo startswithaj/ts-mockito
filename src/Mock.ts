@@ -10,6 +10,10 @@ import { MockableFunctionsFinder } from "./utils/MockableFunctionsFinder";
 import { ObjectInspector } from "./utils/ObjectInspector";
 import { ObjectPropertyCodeRetriever } from "./utils/ObjectPropertyCodeRetriever";
 
+export interface MockOptions {
+    throwIfMockedFunctionIsNotStubbed: boolean
+}
+
 export class Mocker {
     public mock: any = {};
     protected objectInspector = new ObjectInspector();
@@ -19,7 +23,7 @@ export class Mocker {
     private objectPropertyCodeRetriever = new ObjectPropertyCodeRetriever();
     private excludedPropertyNames: string[] = ["hasOwnProperty"];
 
-    constructor(private clazz: any, public instance: any = {}) {
+    constructor(private clazz: any, public instance: any = {}, private options: MockOptions = { throwIfMockedFunctionIsNotStubbed: false }) {
         this.mock.__tsmockitoInstance = this.instance;
         this.mock.__tsmockitoMocker = this;
         if (_.isObject(this.clazz) && _.isObject(this.instance)) {
@@ -240,7 +244,7 @@ export class Mocker {
             const groupIndex = methodStub.getLastMatchingGroupIndex(args);
             return methodStub.getFirstMatchingFromGroupAndRemoveIfNotLast(groupIndex, args);
         } else {
-            if (isInstanceAndFunctionCall) {
+            if (this.options.throwIfMockedFunctionIsNotStubbed && isInstanceAndFunctionCall) {
                 throw new Error('No matching stub for key: ' + key + ' and args: ' + args)
             }
             return this.getEmptyMethodStub(key, args);

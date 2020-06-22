@@ -68,7 +68,7 @@ export class Spy extends Mocker {
 
         const descriptor = Object.getOwnPropertyDescriptor(prototype, key);
         this.realMethods[key] = new RealMethod(descriptor, prototype === this.instance);
-        const isInstanceAndFunctionCall = true;
+        const isInstanceAndFunctionCall = false;
         this.instance[key] = this.createActionListener(key, isInstanceAndFunctionCall);
     }
 }
