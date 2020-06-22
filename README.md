@@ -3,6 +3,10 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito)
 
 This fork simply implements the option to have mocks throw an exception if an un-stubbed function is called. This solves a problem that I had where partially stubbed mocks would be used and an un-stubbed function would be called inside of an rxjs stream returning null, exploding and making things really hard to track down. This option means things fail quickly and obviously.
 
+```
+let mockedFoo:Foo = mock(Foo, {throwIfMockedFunctionIsNotStubbed: true});
+```
+
 I tried first using @johanblumenberg/ts-mockito which seems like a very good fork of ts-mockito overall and has the option of MockPropertyPolicy.throws unfortunately when this option is on the AngularX IOC code doesn't like the mocks - which is kind of understandable as they are Proxies masquerade as mocks, which means some runtime checks can be fooled. I spent sometime trying to understand why Angular thought the mocks with MockPropertyPolicy.throw were `Maps` but ultimately ran out of time.
 
 Further, I attempted to implement:
@@ -11,7 +15,7 @@ But because the implementation throws next tick it doesn't always make your imme
 
 Lastly as im not going to muddy npm any further I commit the lib and reference this git repo directly.
 
-Mocking library for TypeScript inspired by http://mockito.org/
+# Mocking library for TypeScript inspired by http://mockito.org/
 
 ## 1.x to 2.x migration guide
 [1.x to 2.x migration guide](https://github.com/NagRock/ts-mockito/wiki/ts-mockito-1.x-to-2.x-migration-guide)
