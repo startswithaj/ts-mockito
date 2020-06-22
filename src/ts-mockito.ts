@@ -11,31 +11,31 @@ import {
     ArgCaptor8,
     ArgCaptor9,
 } from "./capture/ArgCaptor";
-import {AnyFunctionMatcher} from "./matcher/type/AnyFunctionMatcher";
-import {AnyNumberMatcher} from "./matcher/type/AnyNumberMatcher";
-import {AnyOfClassMatcher} from "./matcher/type/AnyOfClassMatcher";
-import {AnyStringMatcher} from "./matcher/type/AnyStringMatcher";
-import {AnythingMatcher} from "./matcher/type/AnythingMatcher";
-import {BetweenMatcher} from "./matcher/type/BetweenMatcher";
-import {DeepEqualMatcher} from "./matcher/type/DeepEqualMatcher";
-import {MatchingStringMatcher} from "./matcher/type/MatchingStringMatcher";
-import {NotNullMatcher} from "./matcher/type/NotNullMatcher";
-import {ObjectContainingMatcher} from "./matcher/type/ObjectContainingMatcher";
-import {StrictEqualMatcher} from "./matcher/type/StrictEqualMatcher";
-import {MethodStubSetter} from "./MethodStubSetter";
-import {MethodStubVerificator} from "./MethodStubVerificator";
-import {MethodToStub} from "./MethodToStub";
-import {Mocker} from "./Mock";
-import {Spy} from "./Spy";
+import { AnyFunctionMatcher } from "./matcher/type/AnyFunctionMatcher";
+import { AnyNumberMatcher } from "./matcher/type/AnyNumberMatcher";
+import { AnyOfClassMatcher } from "./matcher/type/AnyOfClassMatcher";
+import { AnyStringMatcher } from "./matcher/type/AnyStringMatcher";
+import { AnythingMatcher } from "./matcher/type/AnythingMatcher";
+import { BetweenMatcher } from "./matcher/type/BetweenMatcher";
+import { DeepEqualMatcher } from "./matcher/type/DeepEqualMatcher";
+import { MatchingStringMatcher } from "./matcher/type/MatchingStringMatcher";
+import { NotNullMatcher } from "./matcher/type/NotNullMatcher";
+import { ObjectContainingMatcher } from "./matcher/type/ObjectContainingMatcher";
+import { StrictEqualMatcher } from "./matcher/type/StrictEqualMatcher";
+import { MethodStubSetter } from "./MethodStubSetter";
+import { MethodStubVerificator } from "./MethodStubVerificator";
+import { MethodToStub } from "./MethodToStub";
+import { Mocker, MockOptions } from "./Mock";
+import { Spy } from "./Spy";
 
 export function spy<T>(instanceToSpy: T): T {
     return new Spy(instanceToSpy).getMock();
 }
 
-export function mock<T>(clazz: (new(...args: any[]) => T) | (Function & { prototype: T }) ): T;
-export function mock<T>(clazz?: any): T;
-export function mock<T>(clazz?: any): T {
-    return new Mocker(clazz).getMock();
+export function mock<T>(clazz: (new (...args: any[]) => T) | (Function & { prototype: T }), options: MockOptions): T;
+export function mock<T>(clazz?: any, options?: MockOptions): T;
+export function mock<T>(clazz?: any, options?: MockOptions): T {
+    return new Mocker(clazz, {}, options).getMock();
 }
 
 export function verify<T>(method: T): MethodStubVerificator<T> {

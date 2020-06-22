@@ -23,6 +23,7 @@ export class Mocker {
     private objectPropertyCodeRetriever = new ObjectPropertyCodeRetriever();
     private excludedPropertyNames: string[] = ["hasOwnProperty"];
 
+
     constructor(private clazz: any, public instance: any = {}, private options: MockOptions = { throwIfMockedFunctionIsNotStubbed: false }) {
         this.mock.__tsmockitoInstance = this.instance;
         this.mock.__tsmockitoMocker = this;
