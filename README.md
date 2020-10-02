@@ -13,7 +13,7 @@ Further, I attempted to implement:
 - [Add warning when forgetting to call instance()](https://github.com/johanblumenberg/ts-mockito/commit/e2b52a77324136d8b6a8aabf51eec8babaca221b)
 But because the implementation throws next tick it doesn't always make your immediate test fail. I need sometime to see if I can think of a better methodology
 
-Lastly as im not going to muddy npm any further I commit the lib and reference this git repo directly.
+Lastly as im not going to muddy npm any further. I commit the compiled source and reference this git repo directly.
 
 # Mocking library for TypeScript inspired by http://mockito.org/
 
